@@ -19,7 +19,7 @@ export const SITE_NAME = "DreamCorp Studios";
 
 /* Shown in the footer and the legal pages. Replace with your real support
    inbox and the details of your POPIA Information Officer before launch. */
-export const CONTACT_EMAIL = "support@dreamcorpstudios.co.za";
+export const CONTACT_EMAIL = "admin@dreamcorp.co.za";
 export const LEGAL_ENTITY = "DreamCorp Studios";
 export const INFORMATION_OFFICER = "The DreamCorp Studios Information Officer";
 export const SITE_DESCRIPTOR = "AI images for $1 a day";
