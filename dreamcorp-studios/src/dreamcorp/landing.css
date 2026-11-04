@@ -1,0 +1,530 @@
+/* DreamCorp Studios landing page.
+   Night indigo ground, marigold for the thing you buy, lilac for everything
+   that just informs. The tickets in the hero are the one loud element; the
+   rest stays quiet and left-aligned on a 12-column measure. */
+
+.dc {
+  --night: #15113a;
+  --dusk: #211a52;
+  --dusk-2: #2c2468;
+  --haze: #c7c0ec;
+  --haze-2: #a49cd2;
+  --moon: #f6f3ff;
+  --marigold: #ffc857;
+  --marigold-ink: #2b1900;
+  --lilac: #b9a8ff;
+  --rule: rgba(222, 214, 255, 0.12);
+  --display: var(--font-dc-display), ui-sans-serif, system-ui, sans-serif;
+  --body: var(--font-dc-ui), ui-sans-serif, system-ui, sans-serif;
+
+  min-height: 100vh;
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--moon);
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(185, 168, 255, 0.16), transparent 60%),
+    var(--night);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+.dc *,
+.dc *::before,
+.dc *::after {
+  box-sizing: border-box;
+}
+.dc a {
+  color: inherit;
+}
+.dc :focus-visible {
+  outline: 2px solid var(--marigold);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.dc ::selection {
+  background: rgba(255, 200, 87, 0.32);
+}
+
+.dc-skip {
+  position: absolute;
+  left: 16px;
+  top: -48px;
+  padding: 8px 12px;
+  background: var(--marigold);
+  color: var(--marigold-ink);
+  border-radius: 8px;
+  z-index: 10;
+}
+.dc-skip:focus {
+  top: 12px;
+}
+
+/* ---------- header ---------- */
+
+.dc-header,
+.dc main,
+.dc-footer {
+  width: min(1160px, 100% - 32px);
+  margin-inline: auto;
+}
+.dc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0;
+}
+.dc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--moon);
+}
+.dc-brand svg {
+  color: var(--lilac);
+  --accent: var(--marigold);
+}
+.dc-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dc-nav a {
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--haze);
+  font-size: 15px;
+}
+.dc-nav a:hover {
+  color: var(--moon);
+  background: rgba(222, 214, 255, 0.07);
+}
+.dc-nav .dc-nav-cta {
+  color: var(--moon);
+  border: 1px solid var(--rule);
+  margin-left: 6px;
+}
+@media (max-width: 640px) {
+  .dc-nav a:not(.dc-nav-cta) {
+    display: none;
+  }
+}
+
+.dc-notice {
+  margin: 0 0 8px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 200, 87, 0.4);
+  background: rgba(255, 200, 87, 0.08);
+  border-radius: 12px;
+  color: var(--moon);
+}
+
+/* ---------- hero ---------- */
+
+.dc-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: center;
+  gap: 48px;
+  padding: 56px 0 96px;
+}
+.dc-hero-title {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(44px, 7vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  max-width: 11ch;
+  text-wrap: balance;
+}
+.dc-hero-lede {
+  margin: 28px 0 0;
+  max-width: 38ch;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--haze);
+}
+.dc-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 36px;
+}
+.dc-hero-actions form {
+  margin: 0;
+}
+
+.dc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font: 600 16px/1 var(--body);
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+.dc-btn:active {
+  transform: translateY(1px);
+}
+.dc-btn--primary {
+  background: var(--marigold);
+  color: var(--marigold-ink);
+}
+.dc-btn--primary:hover {
+  background: #ffd67d;
+}
+.dc-btn--ghost {
+  background: transparent;
+  color: var(--moon);
+  border-color: var(--rule);
+}
+.dc-btn--ghost:hover {
+  background: rgba(222, 214, 255, 0.07);
+}
+
+/* ---------- tickets ---------- */
+
+.dc-tickets {
+  position: relative;
+  height: 460px;
+}
+.dc-ticket {
+  --notch: 14px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(340px, 86vw);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  border-radius: 18px;
+  color: var(--marigold-ink);
+  /* Two half-circle notches where the stub tears off. */
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 calc(100% - 52px), transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% calc(100% - 52px), transparent 98%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 calc(100% - 52px), transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% calc(100% - 52px), transparent 98%, #000) right / 51% 100% no-repeat;
+  box-shadow: 0 30px 60px rgba(6, 3, 24, 0.5);
+}
+.dc-ticket[data-plan="day"] {
+  background: var(--marigold);
+}
+.dc-ticket[data-plan="week"] {
+  background: var(--lilac);
+  color: #1a1140;
+}
+.dc-ticket--front {
+  transform: translate(-40%, -22%) rotate(-5deg);
+  animation: dc-deal 900ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+.dc-ticket--back {
+  transform: translate(-60%, -78%) rotate(6deg);
+  animation: dc-deal-back 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes dc-deal {
+  from {
+    opacity: 0;
+    transform: translate(-40%, -4%) rotate(-14deg);
+  }
+}
+@keyframes dc-deal-back {
+  from {
+    opacity: 0;
+    transform: translate(-60%, -60%) rotate(0deg);
+  }
+}
+.dc-ticket-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 22px 24px 20px;
+}
+.dc-ticket-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+.dc-ticket-brand svg {
+  --accent: currentColor;
+}
+.dc-ticket-name {
+  margin-top: 18px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+.dc-ticket-price {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 104px;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+}
+.dc-ticket-stub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 52px;
+  padding: 0 24px;
+  border-top: 2px dashed rgba(43, 25, 0, 0.32);
+  font-size: 14px;
+  font-weight: 600;
+}
+.dc-ticket[data-plan="week"] .dc-ticket-stub {
+  border-top-color: rgba(26, 17, 64, 0.3);
+}
+
+/* ---------- sections ---------- */
+
+.dc-section {
+  padding: 72px 0;
+  border-top: 1px solid var(--rule);
+}
+.dc-h2 {
+  margin: 0;
+  max-width: 22ch;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.dc-section-lede {
+  margin: 16px 0 0;
+  max-width: 56ch;
+  color: var(--haze);
+}
+
+.dc-models {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.dc-model {
+  padding: 10px 16px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-weight: 500;
+  background: rgba(33, 26, 82, 0.6);
+}
+
+/* Two plans side by side; the week card is the default pick, so it carries the fill. */
+.dc-plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 36px;
+  max-width: 860px;
+}
+.dc-plan {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 28px;
+  border-radius: 22px;
+  border: 1px solid var(--rule);
+  background: var(--dusk);
+}
+.dc-plan[data-plan="week"] {
+  background: var(--dusk-2);
+  border-color: rgba(255, 200, 87, 0.45);
+}
+.dc-plan-name {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.dc-plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 10px 0 0;
+}
+.dc-plan-amount {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+.dc-plan-per {
+  color: var(--haze);
+}
+.dc-plan-list {
+  margin: 22px 0 28px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  color: var(--haze);
+  flex: 1;
+}
+.dc-plan-list li {
+  padding-left: 22px;
+  position: relative;
+}
+.dc-plan-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--marigold);
+}
+.dc-fineprint {
+  margin: 18px 0 0;
+  font-size: 14px;
+  color: var(--haze-2);
+}
+
+.dc-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin: 36px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.dc-steps li {
+  counter-increment: step;
+  color: var(--haze);
+  max-width: 34ch;
+}
+.dc-steps li::before {
+  content: counter(step);
+  display: block;
+  margin-bottom: 14px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--lilac);
+}
+.dc-steps strong {
+  color: var(--moon);
+  font-weight: 600;
+}
+
+.dc-faq {
+  margin-top: 28px;
+  max-width: 760px;
+}
+.dc-faq-item {
+  border-bottom: 1px solid var(--rule);
+}
+.dc-faq-item summary {
+  cursor: pointer;
+  padding: 18px 0;
+  font-weight: 600;
+  font-size: 18px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.dc-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.dc-faq-item summary::after {
+  content: "+";
+  font-family: var(--display);
+  font-size: 24px;
+  line-height: 1;
+  color: var(--lilac);
+  transition: transform 200ms ease;
+}
+.dc-faq-item[open] summary::after {
+  transform: rotate(45deg);
+}
+.dc-faq-item p {
+  margin: 0 0 20px;
+  max-width: 62ch;
+  color: var(--haze);
+}
+
+.dc-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 32px 0 48px;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--haze-2);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .dc-hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 32px 0 64px;
+  }
+  .dc-tickets {
+    height: 420px;
+  }
+  .dc-steps {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .dc {
+    font-size: 16px;
+  }
+  .dc-hero-lede {
+    font-size: 18px;
+  }
+  .dc-plans {
+    grid-template-columns: 1fr;
+  }
+  .dc-ticket {
+    width: min(290px, 80vw);
+  }
+  .dc-ticket-price {
+    font-size: 84px;
+  }
+  .dc-section {
+    padding: 56px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-ticket--front,
+  .dc-ticket--back {
+    animation: none;
+  }
+  .dc-btn,
+  .dc-faq-item summary::after {
+    transition: none;
+  }
+}
