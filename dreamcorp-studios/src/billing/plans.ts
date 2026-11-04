@@ -30,11 +30,16 @@ export function formatPrice(cents: number): string {
   return cents % 100 === 0 ? `$${cents / 100}` : `$${(cents / 100).toFixed(2)}`;
 }
 
-/** Status the studio reads; produced on the server by getPassStatus(). */
+/** What the studio knows about the signed-in visitor; produced by getAccessStatus(). */
 export interface PassStatus {
+  signedIn: boolean;
   active: boolean;
+  reason: "ok" | "expired" | "limit" | "disabled" | "signed-out";
+  username: string | null;
+  role: "customer" | "developer" | "admin" | null;
+  unlimited: boolean;
   plan: PlanId | null;
   expiresAt: number | null;
   used: number;
-  cap: number;
+  cap: number | null;
 }

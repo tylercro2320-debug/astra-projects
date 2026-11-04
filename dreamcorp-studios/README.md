@@ -10,6 +10,34 @@ key on the server and sells time-boxed passes through Stripe instead.
 
 The prompt that produced this fork is in [`PROMPT.md`](./PROMPT.md).
 
+## Accounts and access
+
+- **Buyers** pay, then get a username and password on screen (and by email when
+  `RESEND_API_KEY` is set). The login works on any device until the pass ends.
+- **Admin** (`/admin`): create accounts for EFT or manual payments, add a day or
+  week, reset image counts, reset passwords, switch accounts off.
+- **Developers**: unlimited accounts for promo partners, seeded from the
+  `DREAMCORP_SEED_USERS` secret. Regenerate them with a new hash list if a
+  password leaks.
+- Passwords are PBKDF2-SHA256 hashes; sessions are HMAC-signed, HTTP-only
+  cookies that are re-checked on every request; logins lock for 15 minutes
+  after 8 failures per IP.
+
+## Images without an API key
+
+DreamCorp Flash (FLUX.1 schnell) and DreamCorp Lightning (SDXL Lightning) run on
+Cloudflare Workers AI through the `AI` binding. Generated images are stored in KV
+for 30 days and served from `/api/media/<id>`. The Workers AI free allowance is
+daily; past it, generation fails until the next day unless the account is on
+Workers Paid.
+
+## Deploy (Cloudflare)
+
+```bash
+pnpm cf:build
+npx wrangler deploy
+```
+
 ## What changed from upstream
 
 | Area | Upstream | DreamCorp Studios |

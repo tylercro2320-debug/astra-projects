@@ -16,6 +16,12 @@ function resolveOrigin(): string {
 export const SITE_URL = resolveOrigin();
 
 export const SITE_NAME = "DreamCorp Studios";
+
+/* Shown in the footer and the legal pages. Replace with your real support
+   inbox and the details of your POPIA Information Officer before launch. */
+export const CONTACT_EMAIL = "support@dreamcorpstudios.co.za";
+export const LEGAL_ENTITY = "DreamCorp Studios";
+export const INFORMATION_OFFICER = "The DreamCorp Studios Information Officer";
 export const SITE_DESCRIPTOR = "AI images for $1 a day";
 export const SITE_TITLE = `${SITE_NAME} — ${SITE_DESCRIPTOR}`;
 
@@ -23,7 +29,7 @@ export const SITE_DESCRIPTION =
   "Studio-quality AI image generation for $1 a day or $2.99 a week. Eight top image models, one prompt bar, no subscription.";
 
 /** Near-black studio ground; also the installed-app and browser-chrome color. */
-export const STUDIO_BG = "#15113a";
+export const STUDIO_BG = "#0e0b26";
 
 /* The card built by scripts/build-brand-assets.mjs. It lives in public/ rather
    than as an app/opengraph-image file on purpose: the file convention outranks

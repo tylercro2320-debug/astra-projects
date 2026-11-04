@@ -2,7 +2,7 @@ import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { PASS_COOKIE, decodePass } from "@/billing/pass";
+import { currentUser } from "@/server/accounts";
 
 import {
   DEVICE_COOKIE,
@@ -17,9 +17,9 @@ export async function POST(request: Request): Promise<NextResponse> {
   const incoming = (await request.json()) as HandleUploadBody;
   if (
     incoming.type === "blob.generate-client-token" &&
-    !decodePass((await cookies()).get(PASS_COOKIE)?.value)
+    !(await currentUser())
   ) {
-    return NextResponse.json({ error: "No active pass" }, { status: 402 });
+    return NextResponse.json({ error: "Log in to upload" }, { status: 401 });
   }
   const device =
     incoming.type === "blob.generate-client-token" ? await readDeviceId() : null;

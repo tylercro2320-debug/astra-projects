@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 
-import { PASS_COOKIE, demoPassId, encodePass, mintPass, passCookieOptions } from "@/billing/pass";
 import { isPlanId } from "@/billing/plans";
 import { createCheckoutSession, demoCheckoutEnabled, stripeEnabled } from "@/billing/stripe";
+import { issueAccount } from "@/server/onboarding";
 
 /* The pricing cards post a plain form here, so buying works before any
    JavaScript loads. 303 turns the POST into a GET on the next page. */
 export async function POST(request: Request) {
   const origin = new URL(request.url).origin;
+  // Plain form posts aren't covered by Next's server-action CSRF check, so check origin here.
+  const from = request.headers.get("origin");
+  if (from && from !== origin) return new NextResponse("Forbidden", { status: 403 });
+
   const form = await request.formData();
   const plan = form.get("plan");
   if (!isPlanId(plan)) return NextResponse.redirect(`${origin}/?checkout=invalid#passes`, 303);
@@ -22,9 +26,9 @@ export async function POST(request: Request) {
   }
 
   if (demoCheckoutEnabled()) {
-    const pass = mintPass(plan, demoPassId());
-    const response = NextResponse.redirect(`${origin}/studio?pass=started`, 303);
-    response.cookies.set(PASS_COOKIE, encodePass(pass), passCookieOptions(pass));
+    const { token, cookie } = await issueAccount({ plan, source: "demo" });
+    const response = NextResponse.redirect(`${origin}/welcome?t=${token}`, 303);
+    response.cookies.set(cookie.name, cookie.value, cookie.options);
     return response;
   }
 

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { getPassStatus } from "@/billing/actions";
+import { getAccessStatus } from "@/server/session-actions";
 import type { PassStatus } from "@/billing/plans";
 import { submitGeneration } from "@/generation/actions";
 import { MISSING_PASS_MESSAGE, PASS_LIMIT_MESSAGE } from "@/generation/credentials";
@@ -153,7 +153,7 @@ function failureText(status: GenerationStatus): string {
 
 function describeError(caught: unknown): string {
   const message = caught instanceof Error ? caught.message : String(caught);
-  if (message.includes(MISSING_PASS_MESSAGE)) return "Get a Day or Week Pass to generate.";
+  if (message.includes(MISSING_PASS_MESSAGE)) return "Log in with an active pass to generate.";
   if (message.includes(PASS_LIMIT_MESSAGE)) return "This pass has reached its image limit. Start a new pass to keep going.";
   return `Generation failed: ${message}. Try again in a moment.`;
 }
@@ -184,7 +184,7 @@ export function DreamCorpStudio({ fontClassName = "" }: { fontClassName?: string
   const [passModal, setPassModal] = useState<"needed" | "limit" | "info" | null>(null);
   const keyConfigured = pass?.active === true;
   const refreshPass = useCallback(
-    () => void getPassStatus().then(setPass).catch(() => undefined),
+    () => void getAccessStatus().then(setPass).catch(() => undefined),
     [],
   );
 
@@ -227,7 +227,7 @@ export function DreamCorpStudio({ fontClassName = "" }: { fontClassName?: string
   }, [historyLoaded, history]);
 
   useEffect(() => {
-    void getPassStatus().then((status) => {
+    void getAccessStatus().then((status) => {
       setPass(status);
       if (!status.active) setPassModal("needed");
     });
@@ -280,7 +280,7 @@ export function DreamCorpStudio({ fontClassName = "" }: { fontClassName?: string
       } catch (caught) {
         if (!alive.current) return;
         const message = describeError(caught);
-        if (message.includes("Get a Day")) setPassModal("needed");
+        if (message.includes("Log in with")) setPassModal("needed");
         else if (message.includes("image limit")) setPassModal("limit");
         setHistory((prev) => {
           const next = replaceRequest(prev, requestId, failedRows(requestId, expected, draft, message));
@@ -333,7 +333,7 @@ export function DreamCorpStudio({ fontClassName = "" }: { fontClassName?: string
   const generate = useCallback(async () => {
     if (!keyConfigured) {
       setPassModal("needed");
-      setError("Get a Day or Week Pass to generate.");
+      setError("Log in with an active pass to generate.");
       return;
     }
     const plane = assemblePlane();
@@ -397,7 +397,7 @@ export function DreamCorpStudio({ fontClassName = "" }: { fontClassName?: string
       } catch (caught) {
         if (!alive.current) return;
         const message = describeError(caught);
-        if (message.includes("Get a Day")) setPassModal("needed");
+        if (message.includes("Log in with")) setPassModal("needed");
         else if (message.includes("image limit")) setPassModal("limit");
         setError((prev) => prev ?? message);
       } finally {

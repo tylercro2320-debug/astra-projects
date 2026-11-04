@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 
 /** Brand file in /public/model-icons, or nothing if the pack has no match. */
 export function modelIconFile(id: string): string | undefined {
+  if (id.startsWith("dc-")) return "dreamcorp";
   if (id.startsWith("kling")) return "kling";
   if (id.startsWith("wan")) return "wan";
   if (id.startsWith("flux")) return "flux";

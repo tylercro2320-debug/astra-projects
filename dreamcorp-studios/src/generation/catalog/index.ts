@@ -1,3 +1,4 @@
+import { BUILT_IN_MODELS } from "./dreamcorp";
 import { dop } from "./dop";
 import { flux2 } from "./flux-2";
 import { flux3 } from "./flux-3";
@@ -36,10 +37,13 @@ import { wan3 } from "./wan-3";
 import { wan3Prime } from "./wan-3-prime";
 import { zImageTurbo } from "./z-image-turbo";
 
-/* DreamCorp Studios sells cheap image passes, so video models (which cost the
-   platform far more per run) are off unless NEXT_PUBLIC_DREAMCORP_VIDEO=1.
+/* Built-in models (Cloudflare Workers AI) are always on and need no key.
+   Partner models need DREAMCORP_PLATFORM_KEY on the server, so they only show
+   when NEXT_PUBLIC_DREAMCORP_PARTNER_MODELS=1. Video partner models cost far
+   more per run, so they also need NEXT_PUBLIC_DREAMCORP_VIDEO=1.
    NEXT_PUBLIC_ so the picker on the client and the action on the server agree. */
-export const VIDEO_ENABLED = process.env.NEXT_PUBLIC_DREAMCORP_VIDEO === "1";
+export const PARTNER_ENABLED = process.env.NEXT_PUBLIC_DREAMCORP_PARTNER_MODELS === "1";
+export const VIDEO_ENABLED = PARTNER_ENABLED && process.env.NEXT_PUBLIC_DREAMCORP_VIDEO === "1";
 
 const ALL_MODELS: readonly ModelEntry[] = [
   soul2,
@@ -82,9 +86,12 @@ const ALL_MODELS: readonly ModelEntry[] = [
   dop,
 ];
 
-export const MODELS: readonly ModelEntry[] = VIDEO_ENABLED
-  ? ALL_MODELS
-  : ALL_MODELS.filter((model) => model.surface === "image");
+export const MODELS: readonly ModelEntry[] = [
+  ...BUILT_IN_MODELS,
+  ...(PARTNER_ENABLED
+    ? ALL_MODELS.filter((model) => VIDEO_ENABLED || model.surface === "image")
+    : []),
+];
 
 export function getModel(id: string): ModelEntry {
   const model = MODELS.find((entry) => entry.id === id);

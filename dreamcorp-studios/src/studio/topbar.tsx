@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { PLANS, type PassStatus } from "@/billing/plans";
+import type { PassStatus } from "@/billing/plans";
 
 import { VIEWS, VIEW_LABELS, type GalleryView } from "./data";
 import { timeLeft } from "./pass-modal";
@@ -29,14 +29,18 @@ export function Topbar({
   onKeys: () => void;
 }) {
   const tabsRef = useRef<HTMLDivElement>(null);
-  const active = pass?.active === true;
-  const text = active
-    ? `${pass.cap - pass.used} left · ${timeLeft(pass.expiresAt!)}`
-    : "Get a pass";
-  const label = active
-    ? `${PLANS[pass.plan!].name}: ${pass.cap - pass.used} images and ${timeLeft(pass.expiresAt!)} left`
-    : "Get a Day or Week Pass";
   const [thumb, setThumb] = useState<{ x: number; w: number } | null>(null);
+  const active = pass?.active === true;
+  const text = !pass?.signedIn
+    ? "Log in"
+    : !active
+      ? "Pass ended"
+      : pass.unlimited
+        ? pass.expiresAt
+          ? `Unlimited · ${timeLeft(pass.expiresAt)}`
+          : "Unlimited"
+        : `${(pass.cap ?? 0) - pass.used} left · ${timeLeft(pass.expiresAt!)}`;
+  const label = !pass?.signedIn ? "Log in or get a pass" : `Account ${pass.username}: ${text}`;
 
   /* The indicator is measured rather than derived from equal columns, so it
      morphs to each label's real width instead of padding the short ones. */

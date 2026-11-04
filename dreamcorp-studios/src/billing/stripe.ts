@@ -50,7 +50,7 @@ export async function createCheckoutSession(plan: PlanId, origin: string): Promi
 /** The plan and purchase time of a paid session, or null if it's unpaid or unknown. */
 export async function readPaidSession(
   sessionId: string,
-): Promise<{ id: string; plan: PlanId; paidAt: number } | null> {
+): Promise<{ id: string; plan: PlanId; paidAt: number; email?: string } | null> {
   if (!/^cs_[A-Za-z0-9_]+$/.test(sessionId)) return null;
   const response = await fetch(`${API}/checkout/sessions/${sessionId}`, {
     headers: auth(),
@@ -62,10 +62,11 @@ export async function readPaidSession(
     created: number;
     payment_status?: string;
     metadata?: { plan?: string };
+    customer_details?: { email?: string | null };
   };
   const plan = s.metadata?.plan;
   if (s.payment_status !== "paid" || !isPlanId(plan)) return null;
-  /* The pass clock starts at purchase, so re-opening the success link later
-     re-issues the same pass with the same expiry instead of extending it. */
-  return { id: s.id, plan, paidAt: s.created * 1000 };
+  /* The pass clock starts at purchase time, and the account is created once
+     per session, so re-opening the success link never extends access. */
+  return { id: s.id, plan, paidAt: s.created * 1000, email: s.customer_details?.email ?? undefined };
 }

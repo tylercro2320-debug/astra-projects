@@ -1,0 +1,134 @@
+.dc-admin-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.dc-admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 32px 0 0;
+  max-width: 720px;
+}
+.dc-admin-stats div {
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid var(--rule-2);
+  background: rgba(29, 23, 73, 0.7);
+}
+.dc-admin-stats dt {
+  font-size: 13px;
+  color: var(--haze-2);
+}
+.dc-admin-stats dd {
+  margin: 4px 0 0;
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.dc-admin-h {
+  margin: 48px 0 0;
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.dc-admin-create {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: 12px;
+  margin-top: 18px;
+}
+.dc-admin-create > .dc-notice,
+.dc-admin-create > .dc-error {
+  grid-column: 1 / -1;
+}
+.dc-admin-create code,
+.dc-admin-actions code {
+  color: var(--marigold);
+  font-size: 15px;
+  user-select: all;
+}
+.dc-admin-table-wrap {
+  margin-top: 18px;
+  overflow-x: auto;
+  border: 1px solid var(--rule-2);
+  border-radius: 16px;
+}
+.dc-admin-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.dc-admin-table th,
+.dc-admin-table td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+.dc-admin-table th {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--haze-2);
+  background: rgba(29, 23, 73, 0.6);
+}
+.dc-admin-sub {
+  color: var(--haze-2);
+  font-size: 12.5px;
+}
+.dc-num {
+  font-variant-numeric: tabular-nums;
+}
+.dc-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: rgba(222, 214, 255, 0.1);
+  color: var(--haze);
+}
+.dc-pill[data-state="on"] {
+  background: rgba(120, 220, 150, 0.14);
+  color: #9be8b2;
+}
+.dc-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 240px;
+}
+.dc-admin-actions .dc-input {
+  height: 40px;
+  flex: 1;
+}
+.dc-admin-actions .dc-btn {
+  min-height: 40px;
+  padding: 0 14px;
+}
+.dc-admin-actions > .dc-notice,
+.dc-admin-actions > .dc-error {
+  flex-basis: 100%;
+  font-size: 13px;
+}
+@media (max-width: 900px) {
+  .dc-admin-create {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dc-admin-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 520px) {
+  .dc-admin-create,
+  .dc-admin-stats {
+    grid-template-columns: 1fr;
+  }
+}

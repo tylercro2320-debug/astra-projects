@@ -3,12 +3,13 @@
 import { useEffect, useRef } from "react";
 
 import { PLANS, PLAN_IDS, formatPrice, type PassStatus } from "@/billing/plans";
+import { logout } from "@/server/session-actions";
 
 import { CloseIcon } from "./icons";
 
-/* Replaces the original bring-your-own-key modal. DreamCorp holds the platform
-   key; the visitor buys time. Each card is a real form post to /api/checkout,
-   so the dialog needs no client-side payment code at all. */
+/* The account dialog. Signed out: log in or buy a pass. Signed in: what's
+   left on the pass, plus sign-out. Every buy button is a real form post to
+   /api/checkout, so the dialog carries no payment code of its own. */
 export function PassModal({
   status,
   reason,
@@ -26,14 +27,23 @@ export function PassModal({
     panelRef.current?.focus();
   }, []);
 
+  const signedIn = status?.signedIn === true;
   const active = status?.active === true;
-  const title = reason === "limit" ? "You've used this pass up" : active ? "Your pass" : "Get a pass to generate";
-  const copy =
-    reason === "limit"
-      ? `This pass covered ${status?.cap ?? 0} images. Start another to keep going.`
-      : active
-        ? `${PLANS[status.plan!].name}. ${status.used} of ${status.cap} images used, ${timeLeft(status.expiresAt!)} left.`
-        : "Pay once, generate until it runs out. No subscription and nothing renews.";
+  const ended = signedIn && !active;
+  const title = !signedIn
+    ? "Log in to generate"
+    : reason === "limit" || status?.reason === "limit"
+      ? "You've used this pass up"
+      : ended
+        ? "Your pass has ended"
+        : `Signed in as ${status!.username}`;
+  const copy = !signedIn
+    ? "Bought a pass? Log in with the details you were given. New here? A pass takes under a minute."
+    : ended
+      ? "Start a new pass to keep generating. Your gallery stays in this browser."
+      : status!.unlimited
+        ? `${status!.role === "admin" ? "Admin" : "Developer"} access. No image limit${status!.expiresAt ? `, ${timeLeft(status!.expiresAt)} left` : ""}.`
+        : `${PLANS[status!.plan!].name}. ${status!.used} of ${status!.cap} images used, ${timeLeft(status!.expiresAt!)} left.`;
 
   return (
     <dialog
@@ -57,7 +67,7 @@ export function PassModal({
           </button>
         </div>
 
-        {(!active || reason === "limit") && (
+        {(!signedIn || ended) && (
           <div className="dc-pass-options">
             {PLAN_IDS.map((id) => {
               const plan = PLANS[id];
@@ -75,6 +85,27 @@ export function PassModal({
             })}
           </div>
         )}
+
+        <div className="dc-pass-foot">
+          {!signedIn ? (
+            <a className="ohf-btn-quiet" href="/login?next=/studio">
+              I have a login
+            </a>
+          ) : (
+            <>
+              {status!.role === "admin" && (
+                <a className="ohf-btn-quiet" href="/admin">
+                  Open admin
+                </a>
+              )}
+              <form action={logout}>
+                <button type="submit" className="ohf-btn-quiet">
+                  Sign out
+                </button>
+              </form>
+            </>
+          )}
+        </div>
       </div>
     </dialog>
   );

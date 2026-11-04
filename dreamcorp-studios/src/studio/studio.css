@@ -3791,3 +3791,18 @@ a.ohf-btn-solid {
 .dc-pass-option .ohf-keys-save {
   width: 100%;
 }
+.dc-pass-foot {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px 16px;
+}
+.dc-pass-foot a {
+  text-decoration: none;
+}
+.dc-pass-foot a,
+.dc-pass-foot button {
+  display: inline-flex;
+  align-items: center;
+}
