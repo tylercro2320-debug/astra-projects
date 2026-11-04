@@ -15,6 +15,7 @@ import {
   type User,
 } from "./accounts";
 import { hashPassword, readablePassword } from "./crypto";
+import { sendLoginEmail } from "./onboarding";
 
 /* Every admin action re-checks the caller's role on the server. Server actions
    also carry Next's built-in origin check, so another site can't post them. */
@@ -41,10 +42,11 @@ export async function adminCreateUser(_prev: AdminResult | null, form: FormData)
 
   if (isPlanId(kind)) {
     const { user, password } = await createCustomer({ plan: kind, source: "admin", username, email, note });
+    const emailed = email ? await sendLoginEmail(email, user, password) : false;
     revalidatePath("/admin");
     return {
       ok: true,
-      message: `${PLANS[kind].name} created for ${user.username}.`,
+      message: `${PLANS[kind].name} created for ${user.username}.${emailed ? ` Login details emailed to ${email}.` : email ? " The email didn't send, so pass the details on yourself." : ""}`,
       secret: { username: user.username, password },
     };
   }
