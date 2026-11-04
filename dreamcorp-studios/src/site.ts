@@ -10,7 +10,7 @@ function resolveOrigin(): string {
   const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
   if (vercel) return `https://${vercel.replace(/^https?:\/\//, "").replace(/\/+$/, "")}`;
 
-  return "http://localhost:3000";
+  return process.env.NODE_ENV === "production" ? "https://studios.dreamcorp.co.za" : "http://localhost:3000";
 }
 
 export const SITE_URL = resolveOrigin();
