@@ -12,7 +12,7 @@ export function SiteHeader({ intro = true }: { intro?: boolean }) {
       <HeaderScroll />
       <div className="dc-header-inner">
         <Link className="dc-brand" href="/" aria-label={`${SITE_NAME} home`}>
-          <DreamLogo intro={intro} />
+          <DreamLogo intro={intro} size={42} />
         </Link>
         <nav className="dc-nav" aria-label="Main">
           <Link href="/#models">Models</Link>

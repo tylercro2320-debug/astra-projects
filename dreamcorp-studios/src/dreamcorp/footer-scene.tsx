@@ -117,13 +117,14 @@ export function FooterScene() {
       host.addEventListener("pointermove", onPointer);
 
       const target = new THREE.Vector3();
-      const aim = () => (camera.aspect < 1 ? target.set(0, 2.2, 0) : target.set(-2.6, 1.6, 0));
+      // Desktop: moon low and right, clear of the links. Phone: its own block, centered.
+      const aim = () => (camera.aspect < 1.4 ? target.set(0, 0, 0) : target.set(-2.6, 1.6, 0));
       const resize = () => {
         const w = host.clientWidth, h = host.clientHeight;
         renderer.setSize(w, h, false);
         camera.aspect = w / Math.max(1, h);
         // Keep the whole ring in frame on narrow screens.
-        camera.position.z = camera.aspect < 1 ? 13 : 9;
+        camera.position.z = camera.aspect < 1.4 ? 11 : 9;
         camera.updateProjectionMatrix();
         aim();
       };
@@ -135,10 +136,13 @@ export function FooterScene() {
       let raf = 0;
       const frame = () => {
         const t = clock.getElapsedTime();
-        moon.rotation.y = t * 0.06;
-        ring.rotation.y = t * 0.12;
-        camera.position.x += (pointer.x * 0.6 - camera.position.x) * 0.04;
-        camera.position.y += (0.4 - pointer.y * 0.3 - camera.position.y) * 0.04;
+        // Reduced motion keeps the slow turn but drops the parallax.
+        moon.rotation.y = t * (reduce ? 0.03 : 0.06);
+        ring.rotation.y = t * (reduce ? 0.05 : 0.12);
+        if (!reduce) {
+          camera.position.x += (pointer.x * 0.6 - camera.position.x) * 0.04;
+          camera.position.y += (0.4 - pointer.y * 0.3 - camera.position.y) * 0.04;
+        }
         // Aim above and left of the moon so it sits low and right, clear of the footer links.
         camera.lookAt(target);
         renderer.render(scene, camera);
@@ -148,7 +152,7 @@ export function FooterScene() {
         frame();
       };
       const play = () => {
-        if (!raf && !reduce) raf = requestAnimationFrame(loop);
+        if (!raf) raf = requestAnimationFrame(loop);
       };
       const pause = () => {
         cancelAnimationFrame(raf);

@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from "react";
    then the still starts to move, then the edit cuts to the next shot.
 
    Cost control: one full-screen triangle, DPR capped at 1.5, the loop pauses
-   when the monitor is off screen or the tab is hidden, and reduced motion
-   renders a single still frame. */
+   when the monitor is off screen or the tab is hidden, phones render at lower
+   resolution and about 30fps, and reduced motion slows it and drops the cut flash. */
 
 type Shot = {
   prompt: string;
@@ -203,7 +203,9 @@ export function DreamMonitor() {
     };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      // Phones render the shader at a lower resolution; it's soft imagery, so it holds up.
+      const small = window.matchMedia("(max-width: 760px)").matches;
+      const dpr = small ? 0.75 : Math.min(window.devicePixelRatio || 1, 1.5);
       const w = Math.max(1, Math.round(canvas.clientWidth * dpr));
       const h = Math.max(1, Math.round(canvas.clientHeight * dpr));
       if (canvas.width !== w || canvas.height !== h) {
@@ -229,8 +231,8 @@ export function DreamMonitor() {
       draw();
     });
     ro.observe(canvas);
-    if (reduce) return () => ro.disconnect();
 
+    const lowPower = window.matchMedia("(max-width: 760px)").matches;
     let raf = 0;
     let visible = true;
     let last = performance.now();
@@ -240,8 +242,10 @@ export function DreamMonitor() {
       raf = requestAnimationFrame(loop);
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-      state.time += dt;
+      state.time += dt * (reduce ? 0.4 : 1);
       frames++;
+      // Phones draw every other frame (about 30fps) to save battery.
+      if (lowPower && frames % 2) return;
       if (frames % 3 === 0) {
         const total = Math.floor(state.time * 24);
         const f = total % 24, s = Math.floor(total / 24) % 60, m = Math.floor(total / 1440) % 60;
@@ -277,7 +281,7 @@ export function DreamMonitor() {
             setPhase("typing");
             setTyped("");
           })
-          .to(state, { flash: 0.85, duration: 0.04 })
+          .to(state, { flash: reduce ? 0 : 0.85, duration: 0.04 })
           .set(state, { motion: 0, reveal: 0 })
           .to(state, { flash: 0, duration: 0.18 })
           .to(chars, {
