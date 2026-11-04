@@ -13,3 +13,6 @@ tsconfig.tsbuildinfo
 .env*
 .idea
 .netlify
+.open-next
+.wrangler
+.dev.vars
